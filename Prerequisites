@@ -1,0 +1,29 @@
+Hardware Requirements
+•	Raspberry Pi 3 Model B+
+•	8Gb Micro SD Card
+•	Screen\Display
+•	Raspberry Pi Camera Module v2
+•	Dexter GrovePi Board
+•	Grove – Sound Sensor
+•	Grove – Ultrasonic Sensor
+•	Grove – LCD Display
+•	Grove – Red LED
+•	Grove – Blue LED
+•	Grove – Green LED
+•	Sensor Cables
+
+Software Requirements
+•	Raspbian OS
+•	SSH Client (PuTTY)
+•	Python 2.7
+•	Node-RED v0.18.4
+•	Node-Red Dashboard version 2.9.1
+•	Node.js v9.11.1
+
+Scripting Languages
+•	Python
+•	JavaScript
+•	JSON
+•	HTML
+•	Python 2.7
+•	Node-Red
