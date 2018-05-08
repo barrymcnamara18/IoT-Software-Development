@@ -1,0 +1,564 @@
+[
+    {
+        "id": "1f5e03c1.fd8a3c",
+        "type": "tab",
+        "label": "Ultrasonic Sensor",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "93b022de.d38a5",
+        "type": "ui_gauge",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "",
+        "group": "4afa1ab9.84b404",
+        "order": 0,
+        "width": "0",
+        "height": "0",
+        "gtype": "gage",
+        "title": "Sensor Value",
+        "label": "units",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "1000",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "250",
+        "seg2": "600",
+        "x": 390,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "b3f63a37.710178",
+        "type": "ui_chart",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "",
+        "group": "4afa1ab9.84b404",
+        "order": 0,
+        "width": "9",
+        "height": "3",
+        "label": "Rolling Average (1Hr)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "800",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#0080c0",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 600,
+        "y": 560,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "561d518c.3405d",
+        "type": "function",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "Ubidots UltraSonic",
+        "func": "\n// Ubidots HTTP request\n\nvar token = \"A1E-GTuoPFw3zgAlqaSw8oLLOrS2UzFi6F\";\nvar device_api_label = \"iot_project\";\nvar variable_api_label = \"UltraSonic_data\";\n\nmsg.url = \"http://things.ubidots.com/api/v1.6/devices/\" + device_api_label + \"/\" + variable_api_label + \"/values?token=\" + token;\nmsg.method = \"POST\";\n\nvar value = msg.payload;\n\nmsg.payload= {\"value\": value};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 610,
+        "y": 160,
+        "wires": [
+            [
+                "39db4d88.dd1f82"
+            ]
+        ]
+    },
+    {
+        "id": "39db4d88.dd1f82",
+        "type": "http request",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 850,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4459c41d.4b214c",
+        "type": "mqtt in",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "",
+        "topic": "node/generic-node:0/thermometer/0:1/temperature",
+        "qos": "2",
+        "broker": "88fb9472.e83798",
+        "x": 250,
+        "y": 160,
+        "wires": [
+            [
+                "561d518c.3405d"
+            ]
+        ]
+    },
+    {
+        "id": "16b5bbb7.9280f4",
+        "type": "switch",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "AlertLogic",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "50",
+                "vt": "num"
+            },
+            {
+                "t": "lt",
+                "v": "50",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 380,
+        "y": 280,
+        "wires": [
+            [
+                "561d518c.3405d"
+            ],
+            [
+                "b47da6b6.78b0f8",
+                "b89411ef.bc6bc"
+            ]
+        ]
+    },
+    {
+        "id": "8f10ee64.9a28f",
+        "type": "function",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "Take Picture",
+        "func": "// We only want to take pictures when \n// the button is pressed, not when it is released. \nif (msg.payload == 1) { \n    var encoding = \"png\"; \n    var currTime = new Date().getTime();\n\n    // Use the current timestamp to ensure\n    // the picture filename is unique.\n    var fileName = \"/\" + currTime + \".png\";\n    var pictureFilename = \"/home/pi/Desktop/IoT Project/Pictures/\" + currTime + \".\" + encoding;\n    var opts = {\n        mode: \"photo\",\n        encoding: encoding,\n        quality: 10,\n        width: 500,\n        height: 300,\n        rotation: 180,\n        output: pictureFilename,\n        timeout: 1};\n\n    // Use the global RaspiCam to create a camera object.\n    var camera = new context.global.RaspiCam( opts ); \n\n    // Take a picture\n    var process_id = camera.start( opts ); \n\n    // Send the file name to the next node as a payload.\n    msg.payload= (fileName);\nreturn msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 850,
+        "y": 360,
+        "wires": [
+            [
+                "296a080.604c9f8"
+            ]
+        ],
+        "outputLabels": [
+            "True"
+        ]
+    },
+    {
+        "id": "b47da6b6.78b0f8",
+        "type": "change",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "Detected Movement",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "1",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 360,
+        "wires": [
+            [
+                "8f10ee64.9a28f",
+                "9970fe2c.c885b"
+            ]
+        ],
+        "outputLabels": [
+            "1"
+        ]
+    },
+    {
+        "id": "74bb0d9f.e1b814",
+        "type": "ui_template",
+        "z": "1f5e03c1.fd8a3c",
+        "group": "bc55968a.a00ed8",
+        "name": "Image Display",
+        "order": 2,
+        "width": "10",
+        "height": "6",
+        "format": "<div style>\n <img src={{msg.payload}} id='photo' width='auto' height='auto' alt='Getting Image'>\n</div>\n",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "templateScope": "local",
+        "x": 1260,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "296a080.604c9f8",
+        "type": "delay",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "PictureDelay",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "5",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "x": 1030,
+        "y": 360,
+        "wires": [
+            [
+                "74bb0d9f.e1b814",
+                "bf30d1e9.f6607",
+                "59347c49.e90704"
+            ]
+        ]
+    },
+    {
+        "id": "3e955f3.27a7aa",
+        "type": "python-function",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "Blue LED On",
+        "func": "import grovepi\n\n# Connect the blue LED to digital port D3\nblueLED = 3\ngrovepi.pinMode(blueLED,\"OUTPUT\")\ngrovepi.digitalWrite(blueLED,1)\t#Send a value to switch on or off the LED\nreturn \"On\"",
+        "outputs": 1,
+        "x": 1430,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "61dcd382.61d84c",
+        "type": "python-function",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "Blue LED Off",
+        "func": "import grovepi\n\n# Connect the blue LED to digital port D3\nblueLED = 3\ngrovepi.pinMode(blueLED,\"OUTPUT\")\ngrovepi.digitalWrite(blueLED,0)\t#Send a value to switch on or off the LED\nreturn (\"Off\")",
+        "outputs": 1,
+        "x": 1430,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9970fe2c.c885b",
+        "type": "trigger",
+        "z": "1f5e03c1.fd8a3c",
+        "op1": "true",
+        "op2": "false",
+        "op1type": "bool",
+        "op2type": "bool",
+        "duration": "1",
+        "extend": true,
+        "units": "s",
+        "reset": "",
+        "bytopic": "all",
+        "name": "Flash LED",
+        "x": 850,
+        "y": 480,
+        "wires": [
+            [
+                "f3c558c0.52bdc8"
+            ]
+        ]
+    },
+    {
+        "id": "f3c558c0.52bdc8",
+        "type": "switch",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "LED_Switch",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "true",
+        "repair": true,
+        "outputs": 2,
+        "x": 1030,
+        "y": 480,
+        "wires": [
+            [
+                "8c45b842.1309b8"
+            ],
+            [
+                "874fafdd.1c33a"
+            ]
+        ]
+    },
+    {
+        "id": "8c45b842.1309b8",
+        "type": "trigger",
+        "z": "1f5e03c1.fd8a3c",
+        "op1": "true",
+        "op2": "",
+        "op1type": "bool",
+        "op2type": "nul",
+        "duration": "2",
+        "extend": false,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "name": "",
+        "x": 1250,
+        "y": 440,
+        "wires": [
+            [
+                "3e955f3.27a7aa"
+            ]
+        ]
+    },
+    {
+        "id": "874fafdd.1c33a",
+        "type": "trigger",
+        "z": "1f5e03c1.fd8a3c",
+        "op1": "true",
+        "op2": "",
+        "op1type": "bool",
+        "op2type": "nul",
+        "duration": "2",
+        "extend": false,
+        "units": "ms",
+        "reset": "",
+        "bytopic": "all",
+        "name": "",
+        "x": 1250,
+        "y": 520,
+        "wires": [
+            [
+                "61dcd382.61d84c"
+            ]
+        ]
+    },
+    {
+        "id": "1f22baa0.acef25",
+        "type": "grove digital sensor",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "Ultrasonic Ranger",
+        "board": "570df5a0.15312c",
+        "sensor": "ultrasonic",
+        "repeat": "0.5",
+        "pin": "8",
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "16b5bbb7.9280f4",
+                "a0cce69b.dd9ac8",
+                "93b022de.d38a5"
+            ]
+        ]
+    },
+    {
+        "id": "bf30d1e9.f6607",
+        "type": "e-mail",
+        "z": "1f5e03c1.fd8a3c",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "secure": true,
+        "name": "iotrasp141@gmail.com",
+        "dname": "SendMail Alert",
+        "x": 1260,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "a0cce69b.dd9ac8",
+        "type": "smooth",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "",
+        "property": "payload",
+        "action": "mean",
+        "count": "10",
+        "round": "",
+        "mult": "single",
+        "x": 380,
+        "y": 500,
+        "wires": [
+            [
+                "b3f63a37.710178",
+                "5953635e.aeecec"
+            ]
+        ]
+    },
+    {
+        "id": "5953635e.aeecec",
+        "type": "ui_chart",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "",
+        "group": "4afa1ab9.84b404",
+        "order": 0,
+        "width": "9",
+        "height": "3",
+        "label": "Rolling Average (1 Day)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "Y-M-D",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "800",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "colors": [
+            "#1f77b4",
+            "#0080c0",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "useOldStyle": false,
+        "x": 610,
+        "y": 620,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "59347c49.e90704",
+        "type": "python-function",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "set_LCDText",
+        "func": "import grovepi\nimport grove_rgb_lcd\n\n# Ultrasonic Ranger port D8\nultrasonic_ranger = 8\n\n#Sound Sensor port A1\nsound_sensor = 1\n\n#Set the pin mode to be used by the sounnd sensor\ngrovepi.pinMode(sound_sensor,\"INPUT\")\n\n#Take a reading from the ranger\nlcdSonic = (grovepi.ultrasonicRead(ultrasonic_ranger))\n\n#Take a reading from the sound sensor\nlcdSound = (grovepi.analogRead(sound_sensor))\n\n#Set the color and text of the RGB LCD screen\ngrove_rgb_lcd.setText(\"Ranger: \" + str(lcdSonic) + \"   \" + \"Sound: \" + str(lcdSound))\ngrove_rgb_lcd.setRGBrgb(255,225,95)\n\nreturn \"Ultrasonic: \" + str(lcdSonic) + \"Sound Sensor: \" + str(lcdSound)\n",
+        "outputs": 1,
+        "x": 1250,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b89411ef.bc6bc",
+        "type": "function",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "Ubidots Alert",
+        "func": "\n// Ubidots HTTP request\n\nvar token = \"A1E-GTuoPFw3zgAlqaSw8oLLOrS2UzFi6F\";\nvar device_api_label = \"iot_project\";\nvar variable_api_label = \"ranger-alerts\";\n\nmsg.url = \"http://things.ubidots.com/api/v1.6/devices/\" + device_api_label + \"/\" + variable_api_label + \"/values?token=\" + token;\nmsg.method = \"POST\";\n\nvar value = msg.payload;\n\nmsg.payload= {\"value\": value};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 590,
+        "y": 260,
+        "wires": [
+            [
+                "1582cb9d.33e214"
+            ]
+        ]
+    },
+    {
+        "id": "1582cb9d.33e214",
+        "type": "http request",
+        "z": "1f5e03c1.fd8a3c",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 850,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4afa1ab9.84b404",
+        "type": "ui_group",
+        "z": "",
+        "name": "Movement Detection",
+        "tab": "c2388fac.3adc9",
+        "order": 3,
+        "disp": true,
+        "width": "9",
+        "collapse": false
+    },
+    {
+        "id": "88fb9472.e83798",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "bc55968a.a00ed8",
+        "type": "ui_group",
+        "z": "",
+        "name": "Last Pictures Taken",
+        "tab": "c2388fac.3adc9",
+        "order": 4,
+        "disp": true,
+        "width": "10",
+        "collapse": false
+    },
+    {
+        "id": "570df5a0.15312c",
+        "type": "board-config",
+        "z": "",
+        "board": "GrovePi v1.2.3"
+    },
+    {
+        "id": "c2388fac.3adc9",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1
+    }
+]

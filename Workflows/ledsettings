@@ -1,0 +1,274 @@
+[
+    {
+        "id": "cb2665c7.de1f38",
+        "type": "tab",
+        "label": "LED Settings",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "944f065b.667848",
+        "type": "ui_switch",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "label": "Variable LED",
+        "group": "35193e1e.a448c2",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 810,
+        "y": 160,
+        "wires": [
+            [
+                "55caa4fb.2cb8dc"
+            ]
+        ],
+        "outputLabels": [
+            "True"
+        ]
+    },
+    {
+        "id": "58b4fc99.5c2264",
+        "type": "ui_switch",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "label": "Green LED",
+        "group": "35193e1e.a448c2",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 810,
+        "y": 300,
+        "wires": [
+            [
+                "6977efd8.948b8"
+            ]
+        ]
+    },
+    {
+        "id": "2297bd32.931812",
+        "type": "ui_switch",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "label": "Blue LED",
+        "group": "35193e1e.a448c2",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 800,
+        "y": 440,
+        "wires": [
+            [
+                "a372ba20.0f3ee8"
+            ]
+        ]
+    },
+    {
+        "id": "4c10940b.af67ec",
+        "type": "ui_switch",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "label": "Red LED",
+        "group": "35193e1e.a448c2",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 800,
+        "y": 580,
+        "wires": [
+            [
+                "78823460.f4894c"
+            ]
+        ]
+    },
+    {
+        "id": "13b72834.767038",
+        "type": "ui_switch",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "label": "All LED's",
+        "group": "35193e1e.a448c2",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "x": 440,
+        "y": 360,
+        "wires": [
+            [
+                "944f065b.667848",
+                "58b4fc99.5c2264",
+                "2297bd32.931812",
+                "4c10940b.af67ec"
+            ]
+        ]
+    },
+    {
+        "id": "6d00323a.da920c",
+        "type": "inject",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "topic": "Test ON",
+        "payload": "true",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "13b72834.767038"
+            ]
+        ]
+    },
+    {
+        "id": "6b9ded2b.fd0324",
+        "type": "inject",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "topic": "Test OFF",
+        "payload": "false",
+        "payloadType": "bool",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 220,
+        "y": 460,
+        "wires": [
+            [
+                "13b72834.767038"
+            ]
+        ]
+    },
+    {
+        "id": "55caa4fb.2cb8dc",
+        "type": "grove digital output",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "board": "570df5a0.15312c",
+        "pin": "3",
+        "x": 1070,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "6977efd8.948b8",
+        "type": "grove digital output",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "board": "570df5a0.15312c",
+        "pin": "4",
+        "x": 1070,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "a372ba20.0f3ee8",
+        "type": "grove digital output",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "board": "570df5a0.15312c",
+        "pin": "6",
+        "x": 1070,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "78823460.f4894c",
+        "type": "grove digital output",
+        "z": "cb2665c7.de1f38",
+        "name": "",
+        "board": "570df5a0.15312c",
+        "pin": "7",
+        "x": 1070,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "35193e1e.a448c2",
+        "type": "ui_group",
+        "z": "",
+        "name": "LED Control",
+        "tab": "71e0e4b3.6e914c",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "570df5a0.15312c",
+        "type": "board-config",
+        "z": "",
+        "board": "GrovePi v1.2.3"
+    },
+    {
+        "id": "71e0e4b3.6e914c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Control Panal",
+        "icon": "dashboard",
+        "order": 2
+    }
+]

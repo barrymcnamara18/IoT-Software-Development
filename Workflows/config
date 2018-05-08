@@ -1,0 +1,249 @@
+[
+    {
+        "id": "f4ea7808.5d6d98",
+        "type": "mqtt in",
+        "z": "4bcded93.608454",
+        "name": "",
+        "topic": "/v1.6/devices/iot_project/alert-threshold/lv",
+        "qos": "2",
+        "broker": "f711a967.4da588",
+        "x": 260,
+        "y": 280,
+        "wires": [
+            [
+                "9460b2e2.827ce"
+            ]
+        ]
+    },
+    {
+        "id": "4cbb9467.6aea6c",
+        "type": "mqtt in",
+        "z": "4bcded93.608454",
+        "name": "",
+        "topic": "node/generic-node:0/thermometer/0:1/temperature",
+        "qos": "2",
+        "broker": "88fb9472.e83798",
+        "x": 870,
+        "y": 120,
+        "wires": [
+            [
+                "2fea6824.9cd758",
+                "56ae665a.24c288"
+            ]
+        ]
+    },
+    {
+        "id": "2fea6824.9cd758",
+        "type": "function",
+        "z": "4bcded93.608454",
+        "name": "Ubidots Alert Threshold",
+        "func": "\n// Ubidots HTTP request\n\nvar token = \"A1E-GTuoPFw3zgAlqaSw8oLLOrS2UzFi6F\";\nvar device_api_label = \"iot_project\";\nvar variable_api_label = \"alert-threshold\";\n\nmsg.url = \"http://things.ubidots.com/api/v1.6/devices/\" + device_api_label + \"/\" + variable_api_label + \"/values?token=\" + token;\nmsg.method = \"POST\";\n\nvar value = msg.payload;\n\nmsg.payload= {\"value\": value};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1250,
+        "y": 280,
+        "wires": [
+            [
+                "46b0163a.727d38"
+            ]
+        ]
+    },
+    {
+        "id": "46b0163a.727d38",
+        "type": "http request",
+        "z": "4bcded93.608454",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 1490,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9460b2e2.827ce",
+        "type": "ui_slider",
+        "z": "4bcded93.608454",
+        "name": "",
+        "label": "",
+        "group": "adef6f95.0a4aa",
+        "order": 4,
+        "width": "6",
+        "height": "1",
+        "passthru": true,
+        "topic": "",
+        "min": "10",
+        "max": "100",
+        "step": "5",
+        "x": 650,
+        "y": 280,
+        "wires": [
+            [
+                "2fea6824.9cd758",
+                "dd891981.416908"
+            ]
+        ]
+    },
+    {
+        "id": "dd891981.416908",
+        "type": "ui_text",
+        "z": "4bcded93.608454",
+        "group": "adef6f95.0a4aa",
+        "order": 3,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Alert Threshold \\ 10s",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "x": 940,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "4ff00f6c.c290c",
+        "type": "ui_slider",
+        "z": "4bcded93.608454",
+        "name": "reading_frequency",
+        "label": "",
+        "group": "adef6f95.0a4aa",
+        "order": 2,
+        "width": "6",
+        "height": "1",
+        "passthru": true,
+        "topic": "",
+        "min": "0.2",
+        "max": "5",
+        "step": "0.2",
+        "x": 690,
+        "y": 420,
+        "wires": [
+            [
+                "47fc6208.56ef1c",
+                "56ae665a.24c288"
+            ]
+        ]
+    },
+    {
+        "id": "47fc6208.56ef1c",
+        "type": "ui_text",
+        "z": "4bcded93.608454",
+        "group": "adef6f95.0a4aa",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "",
+        "label": "Reading Frequency (ms)",
+        "format": "{{msg.payload}}",
+        "layout": "row-center",
+        "x": 950,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "56ae665a.24c288",
+        "type": "function",
+        "z": "4bcded93.608454",
+        "name": "Ubidots Reading Frequency",
+        "func": "\n// Ubidots HTTP request\n\nvar token = \"A1E-GTuoPFw3zgAlqaSw8oLLOrS2UzFi6F\";\nvar device_api_label = \"iot_project\";\nvar variable_api_label = \"reading_frequency\";\n\nmsg.url = \"http://things.ubidots.com/api/v1.6/devices/\" + device_api_label + \"/\" + variable_api_label + \"/values?token=\" + token;\nmsg.method = \"POST\";\n\nvar value = msg.payload;\n\nmsg.payload= {\"value\": value};\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 1260,
+        "y": 420,
+        "wires": [
+            [
+                "bb260f00.a186d"
+            ]
+        ]
+    },
+    {
+        "id": "bb260f00.a186d",
+        "type": "http request",
+        "z": "4bcded93.608454",
+        "name": "",
+        "method": "use",
+        "ret": "txt",
+        "url": "",
+        "tls": "",
+        "x": 1490,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4fd656e4.946248",
+        "type": "mqtt in",
+        "z": "4bcded93.608454",
+        "name": "",
+        "topic": "/v1.6/devices/iot_project/reading_frequency/lv",
+        "qos": "2",
+        "broker": "f711a967.4da588",
+        "x": 250,
+        "y": 420,
+        "wires": [
+            [
+                "4ff00f6c.c290c"
+            ]
+        ]
+    },
+    {
+        "id": "f711a967.4da588",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "",
+        "broker": "things.ubidots.com",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "15",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "88fb9472.e83798",
+        "type": "mqtt-broker",
+        "z": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": ""
+    },
+    {
+        "id": "adef6f95.0a4aa",
+        "type": "ui_group",
+        "z": "",
+        "name": "System Settings",
+        "tab": "71e0e4b3.6e914c",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "71e0e4b3.6e914c",
+        "type": "ui_tab",
+        "z": "",
+        "name": "Control Panal",
+        "icon": "dashboard",
+        "order": 2
+    }
+]
